@@ -1,0 +1,108 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title th:text="#{home.title}"></title>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="/ajax/page.js" defer></script>
+        <script src="/ajax/search.js" defer></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous" async></script>
+        <style>
+            .th-container {
+                width: 250px;
+                display: flex;
+            }
+            .sort-form {
+                display: flex;
+            }
+            .sort-form select {
+                width: 80px;
+            }
+        </style>
+    </head>
+    <body>
+<div class="container-fluid">
+    <div>
+        <h1>Blog Personal</h1>
+        <p>
+            <a class="btn btn-success" style="float: left" th:href="@{/blog/create}">Add new Blog</a>
+
+        <form class="d-flex" style="width: 400px; margin-left: 1000px" id="searchForm" method="get">
+            <input class="form-control me-2" type="search" id="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        </p>
+    </div>
+    <div class="notify">
+        <div th:if="${success}">
+            <span th:text="${success}"></span>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped" id="results" >
+            <thead>
+            <tr>
+                <th>STT</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th th:text="#{home.author}"></th>
+                <th>
+                    <span>Category</span>
+                    <span>
+                        <form class="sort-form" method="get" action="blog">
+                        <select name="category">
+                            <option th:each="category: ${categorys}" th:text="${category.name}" th:value="${category.id}"></option>
+                        </select>
+                        <button type="submit">Check</button>
+                    </form>
+                    </span>
+                </th>
+                <th>
+                    <span>Time Create</span>
+                    <form class="sort-form" method="get" action="blog">
+                        <select name="sort">
+                            <option value="asc">Up</option>
+                            <option value="desc">Down</option>
+                        </select>
+                        <button type="submit">Sort</button>
+                    </form>
+                </th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Blog Detail</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="blog,status:${blogList}">
+                <td th:text="${status.count}"></td>
+                <td th:text="${blog.getTitle()}"></td>
+                <td th:text="${blog.getContent()}"></td>
+                <td th:text="${blog.getAuthor()}"></td>
+                <td th:text="${blog.category.name}"></td>
+                <td th:text="${blog.createDate}"></td>
+                <td><a class="btn btn-warning" th:href="@{blog/{id}/edit(id=${blog.getId()})}">Edit</a></td>
+                <td><a class="btn btn-danger" th:href="@{blog/{id}/delete(id=${blog.getId()})}">Delete</a></td>
+                <td><a class="btn btn-info" th:href="@{blog/{id}/view(id=${blog.getId()})}">Blog Detail</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <button type="button" id="loadMore" data-page="1">Tải thêm</button>
+<!--    <nav>-->
+<!--        <ul class="pagination">-->
+<!--            <li class="page-item" th:if="${blogList.hasPrevious()}">-->
+<!--                <a class="page-link" th:href="@{blog(page=${blogList.number - 1},search=${search})}">Previous</a>-->
+<!--            </li>-->
+<!--            <li class="page-item" th:if="${blogList.hasNext()}">-->
+<!--                <a class="page-link" th:href="@{blog(page=${blogList.number + 1},search=${search})}">Next</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+<!--    <th:block th:replace="~{bootstrap::footter}"></th:block>-->
+</div>
+</body>
+</html>
